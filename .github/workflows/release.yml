@@ -1,0 +1,34 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [version.txt]
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Read version file
+        id: read_file
+        run: echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
+
+      - name: Zip plugin
+        run: zip -r ithemes-security-pro-${{ steps.read_file.outputs.version }}.zip ./src
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # we're using their "changelog" for the body of our release
+          body_path: src/history.txt
+          name: ${{ steps.read_file.outputs.version }}
+          tag_name: v${{ steps.read_file.outputs.version }}
+          files: ithemes-security-pro-${{ steps.read_file.outputs.version }}.zip
+          make_latest: true
