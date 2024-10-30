@@ -26,8 +26,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          # we're using their "changelog" for the body of our release
-          body_path: src/history.txt
           name: ${{ steps.read_file.outputs.version }}
           tag_name: v${{ steps.read_file.outputs.version }}
           files: ithemes-security-pro-${{ steps.read_file.outputs.version }}.zip
