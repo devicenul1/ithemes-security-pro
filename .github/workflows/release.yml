@@ -21,7 +21,10 @@ jobs:
         run: echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
 
       - name: Zip plugin
-        run: zip -r ithemes-security-pro-${{ steps.read_file.outputs.version }}.zip src
+        run: |
+          mkdir ithemes-security-pro
+          cp -r src/* ithemes-security-pro
+          zip -r ithemes-security-pro-${{ steps.read_file.outputs.version }}.zip ithemes-security-pro
 
       - name: Release
         uses: softprops/action-gh-release@v2
